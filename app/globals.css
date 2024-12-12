@@ -5,12 +5,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --cursor-color: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --cursor-color: #ededed;
   }
 }
 
@@ -19,3 +21,21 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Style pour le curseur avec couleur */
+.mf-cursor {
+  color: var(--foreground);
+}
+
+.mf-cursor.-text:before {
+  background-color: var(--cursor-color);
+  opacity: 1 !important;
+  transition: background-color 0.5s ease;
+}
+
+.mf-cursor-text {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+}
+

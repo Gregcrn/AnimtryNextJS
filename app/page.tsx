@@ -1,101 +1,89 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
+import CustomCursor from "./components/CustomCursor";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import BentoGrid from "./components/BentoGrid";
+import ButtonScroll from "./components/ButtonScroll";
+import ProjectModal from "./components/ProjectModal";
+import ProjectOverlay from "./components/ProjectOverlay";
+import OverView from "./components/OverView";
+import Overlay from "./components/Overlay";
+const projects = [
+  { 
+    id: 0,
+    title: "C2 Montreal",
+    src: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80",
+    color: "#000000"
+  },
+  {
+    id: 1,
+    title: "Office Studio",
+    src: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    color: "#8C8C8C"
+  },
+  {
+    id: 2,
+    title: "Locomotive",
+    src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80",
+    color: "#EFE8D3"
+  },
+  {
+    id: 3,
+    title: "Silencio",
+    src: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    color: "#706D63"
+  }
+]
+
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [modal, setModal] = useState({
+    active: false, 
+    index: 0, 
+    isClicked: false, 
+    isExpanded: false, 
+    isPositioned: false
+  });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    if (modal.isClicked) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'unset';
+    }
+  }, [modal.isClicked]);
+
+  return (
+    <main className={`min-h-screen relative ${modal.isClicked ? "pointer-events-none" : ""}`}>
+      <CustomCursor />
+      <div className={`transition-all duration-500 ${modal.isClicked ? "opacity-0" : "opacity-100"}`}>
+        <nav>
+          <Navbar />
+        </nav>
+        <Hero />
+        <div className="bento-grid">
+          <BentoGrid />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <div className="button-scroll flex justify-center items-center mb-20">
+          <ButtonScroll />
+        </div>
+      </div>
+
+      <div className={`grid grid-cols-2 w-full transition-opacity duration-500 ${modal.isPositioned ? "opacity-0" : "opacity-100"}`}>
+        {projects.map((project, index) => (
+          <ProjectOverlay 
+            key={project.id} 
+            index={index} 
+            title={project.title} 
+            setModal={setModal}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        ))}
+      </div>
+
+      <OverView projects={projects} modal={modal} />
+      <Overlay isVisible={modal.isClicked} />
+    </main>
   );
 }
